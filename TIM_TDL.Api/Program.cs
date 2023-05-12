@@ -1,9 +1,32 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using TIM_TDL.Application.Dtos.User;
+using TIM_TDL.Application.IServices;
+using TIM_TDL.Application.Services;
+using TIM_TDL.Application.Utilities;
+using TIM_TDL.Domain.IRepositories;
+using TIM_TDL.Infrastructure;
+using TIM_TDL.Infrastructure.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Host.UseSerilog(Log.Logger);
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:TIMConnection"]));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -16,24 +39,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
+app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var result = await userService.RegisterAsync(dto);
+    return result.Match<IResult>(
+        user => Results.Ok(user),
+        error => Results.BadRequest("No jeb³o"),
+        _ => Results.NotFound()
+        );
 })
-.WithName("GetWeatherForecast")
+.WithName("ApiRegister")
 .WithOpenApi();
 
 app.Run();
