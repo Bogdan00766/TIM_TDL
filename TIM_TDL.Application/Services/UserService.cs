@@ -59,7 +59,7 @@ namespace TIM_TDL.Application.Services
             {
                 _Logger.Error(ex, "Error during inserting new user to database");
             }
-            return new Error();
+            return new Error();  
             return new NotFound();
         }
 
