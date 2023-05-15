@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TIM_TDL.Application.Dtos.User
 {
-    public class RegisterUserDto
+    public class RegisterLoginUserDto
     {
         public string Email { get; set; }
         public string Password { get; set; }

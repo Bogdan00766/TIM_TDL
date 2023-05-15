@@ -7,8 +7,8 @@ using TIM_TDL.Domain.Models;
 
 namespace TIM_TDL.Domain.IRepositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IJobRepository : IRepository<Job>
     {
-        User FindByEmail(string email);
+
     }
 }

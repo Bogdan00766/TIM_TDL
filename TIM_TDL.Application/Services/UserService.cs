@@ -39,7 +39,7 @@ namespace TIM_TDL.Application.Services
             return hash;
         }
 
-        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterUserDto dto)
+        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterLoginUserDto dto)
         {
             _Logger.Verbose("Register Task in User Service called");
 
@@ -62,6 +62,37 @@ namespace TIM_TDL.Application.Services
             return new Error();  
             return new NotFound();
         }
-
+        private bool ifHashesEqual(byte[] hash1, byte[] hash2)
+        {
+            bool bEqual = false;
+            if (hash1.Length == hash2.Length)
+            {
+                int i = 0;
+                while ((i < hash1.Length) && (hash1[i] == hash2[i]))
+                {
+                    i += 1;
+                }
+                if (i == hash1.Length)
+                {
+                    bEqual = true;
+                }
+            }
+            return bEqual;
+        }
+        public OneOf<UserDataDto, Error, NotFound> Login(RegisterLoginUserDto dto)
+        {
+            var user = _UserRepository.FindByEmail(dto.Email);
+            if (user == null)
+            {
+                return new NotFound();
+            }
+            var hash = HashPassword(dto.Email, dto.Password);
+            if (ifHashesEqual (hash, user.Password)) 
+            {
+                return _Mapper.Map<UserDataDto>(user);
+            }
+            return new Error();
+            throw new NotImplementedException();
+        }
     }
 }

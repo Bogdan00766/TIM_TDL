@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using TIM_TDL.Application.Dtos.Job;
 using TIM_TDL.Application.Dtos.User;
 using TIM_TDL.Application.IServices;
 using TIM_TDL.Application.Services;
@@ -28,6 +29,9 @@ builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,7 +44,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
+app.MapPost("/api/register", async (RegisterLoginUserDto dto, IUserService userService) =>
 {
     var result = await userService.RegisterAsync(dto);
     return result.Match<IResult>(
@@ -50,6 +54,26 @@ app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userServic
         );
 })
 .WithName("ApiRegister")
+.WithOpenApi();
+
+app.MapPost("/api/login", (RegisterLoginUserDto dto, IUserService userService) =>
+{
+    var result = userService.Login(dto);
+    return result.Match<IResult>(
+        user => Results.Ok(user),
+        error => Results.BadRequest("zue chas³o"),
+        _ => Results.NotFound()
+        );
+})
+.WithName("ApiLogin")
+.WithOpenApi();
+
+app.MapPost("/api/job", async (CreateJobDto dto, IJobService jobService) =>
+{
+    var result = await jobService.AddJobAsync(dto);
+    return result;
+})
+.WithName("ApiJob")
 .WithOpenApi();
 
 app.Run();

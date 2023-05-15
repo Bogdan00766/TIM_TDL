@@ -13,6 +13,7 @@ namespace TIM_TDL.Infrastructure
         public TDLDbContext(DbContextOptions<TDLDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Job> Jobs { get; set; }
 
     }
 }

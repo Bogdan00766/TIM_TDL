@@ -13,5 +13,10 @@ namespace TIM_TDL.Infrastructure.Repositories
         public UserRepository(TDLDbContext dbContext) : base(dbContext)
         {
         }
+
+        public User FindByEmail(string email)
+        {
+            return _dbContext.Users.Where(x => x.Email == email).FirstOrDefault();
+        }
     }
 }

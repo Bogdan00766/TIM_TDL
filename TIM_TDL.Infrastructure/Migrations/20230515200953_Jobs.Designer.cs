@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TIM_TDL.Infrastructure;
 
@@ -11,9 +12,11 @@ using TIM_TDL.Infrastructure;
 namespace TIM_TDL.Infrastructure.Migrations
 {
     [DbContext(typeof(TDLDbContext))]
-    partial class TDLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230515200953_Jobs")]
+    partial class Jobs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
