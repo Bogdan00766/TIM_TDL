@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,14 @@ namespace TIM_TDL.Application.Services
         private readonly IUserRepository _UserRepository;
         private readonly IJobRepository _JobRepository;
         private readonly IMapper _Mapper;
+        private readonly ILogger _Logger;
 
-        public JobService(IUserRepository UserRepository, IJobRepository JobRepository, IMapper Mapper)
+        public JobService(IUserRepository UserRepository, IJobRepository JobRepository, IMapper Mapper, ILogger Logger)
         {
             _UserRepository = UserRepository;
             _JobRepository = JobRepository;
             _Mapper = Mapper;
+            _Logger = Logger.ForContext<JobService>();
         }
         public async Task<NewJobDto> AddJobAsync(CreateJobDto dto)
         {
@@ -38,7 +41,8 @@ namespace TIM_TDL.Application.Services
                 Status = dto.Status,
                 Owner = user
             };
-
+            //zwracać OneOf DTO i sprawdzanie istniejacego usera - funkcja rejestracji 
+            _Logger.Information("User of id: {id} and email: {email} added job of id: {idJob} and name: {name}", user.Id, user.Email, job.Id, job.Name);
             _JobRepository.Create(job);
             await _JobRepository.SaveAsync();
             return _Mapper.Map<NewJobDto>(job);
