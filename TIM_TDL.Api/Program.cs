@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 using TIM_TDL.Application.Dtos.User;
 using TIM_TDL.Application.IServices;
 using TIM_TDL.Application.Services;
@@ -15,8 +17,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-});
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, // Sprawdzanie wydawcy tokenu
+        ValidateAudience = true, // Sprawdzanie odbiorcy tokenu
+        ValidateLifetime = true, // Sprawdzanie wa¿noœci tokenu
+        ValidateIssuerSigningKey = true, // Sprawdzanie klucza uwierzytelniania
 
+        ValidIssuer = "issuer", // Poprawny wydawca tokenu
+        ValidAudience = "audience", // Poprawny odbiorca tokenu
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("klucz uwierzytelniania")) // Klucz uwierzytelniania
+    };
+});
 
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
@@ -51,7 +66,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
 {
