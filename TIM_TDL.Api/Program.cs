@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using TIM_TDL.Application.Dtos.Job;
 using System.Text;
 using TIM_TDL.Application.Dtos.User;
 using TIM_TDL.Application.IServices;
@@ -24,7 +25,7 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true, // Sprawdzanie wydawcy tokenu
         ValidateAudience = true, // Sprawdzanie odbiorcy tokenu
-        ValidateLifetime = true, // Sprawdzanie wa¿noœci tokenu
+        ValidateLifetime = true, // Sprawdzanie waÂ¿noÅ“ci tokenu
         ValidateIssuerSigningKey = true, // Sprawdzanie klucza uwierzytelniania
 
         ValidIssuer = "issuer", // Poprawny wydawca tokenu
@@ -56,6 +57,9 @@ builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -69,16 +73,36 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
+app.MapPost("/api/register", async (RegisterLoginUserDto dto, IUserService userService) =>
 {
     var result = await userService.RegisterAsync(dto);
     return result.Match<IResult>(
         user => Results.Ok(user),
-        error => Results.BadRequest("No jeb³o"),
+        error => Results.BadRequest("No jebÂ³o"),
         _ => Results.NotFound()
         );
 })
 .WithName("ApiRegister")
+.WithOpenApi();
+
+app.MapPost("/api/login", (RegisterLoginUserDto dto, IUserService userService) =>
+{
+    var result = userService.Login(dto);
+    return result.Match<IResult>(
+        user => Results.Ok(user),
+        error => Results.BadRequest("zue chasÂ³o"),
+        _ => Results.NotFound()
+        );
+})
+.WithName("ApiLogin")
+.WithOpenApi();
+
+app.MapPost("/api/job", async (CreateJobDto dto, IJobService jobService) =>
+{
+    var result = await jobService.AddJobAsync(dto);
+    return result;
+})
+.WithName("ApiJob")
 .WithOpenApi();
 
 app.Run();

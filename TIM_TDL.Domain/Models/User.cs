@@ -10,5 +10,6 @@ namespace TIM_TDL.Domain.Models
     {
         public string Email { get; set; }
         public byte[] Password { get; set; }
+        public List<Job> Jobs { get; set; }
     }
 }
