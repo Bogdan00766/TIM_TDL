@@ -49,6 +49,9 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
+//builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:TIMConnection"]));
+builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlite("Data Source=localDB.db"));
+
 builder.Configuration.AddEnvironmentVariables("ENV_");
 
 Log.Logger = new LoggerConfiguration()
@@ -58,7 +61,10 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog(Log.Logger);
 var secretKey = builder.Configuration["Keys:JWT"];
+
+//To Add-Migration comment line below
 if (secretKey == null ||secretKey.Length == 0) throw new Exception("No JWT key");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
@@ -84,7 +90,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:TIMConnection"]));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
