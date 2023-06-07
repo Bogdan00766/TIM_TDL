@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TIM_TDL.Domain.Utils;
 
 namespace TIM_TDL.Application.Dtos.User
 {
@@ -10,6 +11,6 @@ namespace TIM_TDL.Application.Dtos.User
     {
         public int Id { get; set; }
         public string Email { get; set; }
-        public string JWTToken { get; set; }
+        public DataTypes.Roles Role { get; set; }
     }
 }

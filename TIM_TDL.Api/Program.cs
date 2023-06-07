@@ -109,7 +109,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapPost("/api/register", async (LoginUserDto dto, IUserService userService) =>
+app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
 {
     var result = await userService.RegisterAsync(dto);
     return result.Match<IResult>(
