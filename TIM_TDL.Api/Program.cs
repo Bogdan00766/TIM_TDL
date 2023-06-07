@@ -12,27 +12,36 @@ using TIM_TDL.Application.Utilities;
 using TIM_TDL.Domain.IRepositories;
 using TIM_TDL.Infrastructure;
 using TIM_TDL.Infrastructure.Repositories;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using TIM_TDL.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true, // Sprawdzanie wydawcy tokenu
-        ValidateAudience = true, // Sprawdzanie odbiorcy tokenu
-        ValidateLifetime = true, // Sprawdzanie wa¿noœci tokenu
-        ValidateIssuerSigningKey = true, // Sprawdzanie klucza uwierzytelniania
 
-        ValidIssuer = "issuer", // Poprawny wydawca tokenu
-        ValidAudience = "audience", // Poprawny odbiorca tokenu
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("klucz uwierzytelniania")) // Klucz uwierzytelniania
-    };
-});
+
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+
+//.AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = false, // Sprawdzanie wydawcy tokenu
+//        ValidateAudience = false, // Sprawdzanie odbiorcy tokenu
+//        ValidateLifetime = true, // Sprawdzanie wa¿noœci tokenu
+//        ValidateIssuerSigningKey = true, // Sprawdzanie klucza uwierzytelniania
+
+//        ValidIssuer = "issuer", // Poprawny wydawca tokenu
+//        ValidAudience = "audience", // Poprawny odbiorca tokenu
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TakiKluczOTakiKluczOTakiKluczOTakiKluczOTakiKluczOTakiKluczO")) // Klucz uwierzytelniania
+//    };
+//});
+
+//builder.Services.AddAuthorization();
 
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
@@ -40,14 +49,37 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
+builder.Configuration.AddEnvironmentVariables("ENV_");
+
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
     .CreateLogger();
 
 builder.Host.UseSerilog(Log.Logger);
-
-
+var secretKey = builder.Configuration["Keys:JWT"];
+if (secretKey == null ||secretKey.Length == 0) throw new Exception("No JWT key");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ClockSkew = TimeSpan.Zero,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey)),
+            ValidateIssuerSigningKey = true,
+            RequireExpirationTime = true,
+            RequireAudience = true,
+            RequireSignedTokens = true,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration["Keys:Issuer"]
+            //IgnoreTrailingSlashWhenValidatingAudience = true,
+            //ValidAudience = "api://my-audience/",
+            //ValidateAudience = true,
+        };
+    }
+    );
+builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -72,39 +104,41 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapPost("/api/register", async (RegisterLoginUserDto dto, IUserService userService) =>
+app.MapPost("/api/register", async (LoginUserDto dto, IUserService userService) =>
 {
     var result = await userService.RegisterAsync(dto);
     return result.Match<IResult>(
         user => Results.Ok(user),
-        error => Results.BadRequest("No jeb³o"),
+        error => Results.BadRequest("Error during register process"),
         _ => Results.NotFound()
         );
 })
 .WithName("ApiRegister")
 .WithOpenApi();
 
-app.MapPost("/api/login", (RegisterLoginUserDto dto, IUserService userService) =>
+app.MapPost("/api/login", (LoginUserDto dto, IUserService userService) =>
 {
     var result = userService.Login(dto);
     return result.Match<IResult>(
         user => Results.Ok(user),
-        error => Results.BadRequest("zue chas³o"),
+        error => Results.Unauthorized(),
         _ => Results.NotFound()
         );
 })
 .WithName("ApiLogin")
 .WithOpenApi();
 
-app.MapPost("/api/job", async (CreateJobDto dto, IJobService jobService) =>
+
+
+app.MapPost("/api/job", async (CreateJobDto dto, [FromHeader(Name = "JWTToken")] string token, IJobService jobService) =>
 {
+
     var result = await jobService.AddJobAsync(dto);
     return result;
 })
 .WithName("ApiJob")
-.WithOpenApi();
-
+.WithOpenApi()
+.RequireAuthorization();
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

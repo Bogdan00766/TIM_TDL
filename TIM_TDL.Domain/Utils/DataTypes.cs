@@ -14,5 +14,12 @@ namespace TIM_TDL.Domain.Utils
             InProgress = 2,
             Planned = 3,
         }
+
+        public enum Roles
+        {
+            Error = 0,
+            User = 1,
+            Admin = 2,
+        }
     }
 }

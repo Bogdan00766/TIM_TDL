@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using TIM_TDL.Domain.Utils;
 
-namespace TIM_TDL.Domain.Models
+namespace TIM_TDL.Application.Dtos.User
 {
-    public class User : Entity
+    public class RegisterUserDto
     {
         public string Email { get; set; }
-        public byte[] Password { get; set; }
+        public string Password { get; set; }
         public DataTypes.Roles Role { get; set; }
-        public List<Job> Jobs { get; set; }
     }
 }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TIM_TDL.Application.Dtos.User
 {
-    public  class UserDataDto
+    public class LoginUserDto
     {
-        public int Id { get; set; }
         public string Email { get; set; }
-        public string JWTToken { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using OneOf;
 using OneOf.Types;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +25,14 @@ namespace TIM_TDL.Application.Services
         private readonly ILogger _Logger;
         private readonly IMapper _Mapper;
         private readonly IUserRepository _UserRepository;
+        private readonly IConfiguration _Configuration;
 
-        public UserService(ILogger logger, IMapper mapper, IUserRepository userRepository)
+        public UserService(ILogger logger, IMapper mapper, IUserRepository userRepository, IConfiguration configuration)
         {
             _Logger = logger.ForContext<UserService>();
             _Mapper = mapper;
             _UserRepository = userRepository;
+            _Configuration = configuration;
             
         }
 
@@ -39,7 +46,7 @@ namespace TIM_TDL.Application.Services
             return hash;
         }
 
-        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterLoginUserDto dto)
+        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(LoginUserDto dto)
         {
             _Logger.Verbose("Register Task in User Service called");
 
@@ -79,7 +86,7 @@ namespace TIM_TDL.Application.Services
             }
             return bEqual;
         }
-        public OneOf<UserDataDto, Error, NotFound> Login(RegisterLoginUserDto dto)
+        public OneOf<TokenInfoDto, Error, NotFound> Login(LoginUserDto dto)
         {
             var user = _UserRepository.FindByEmail(dto.Email);
             if (user == null)
@@ -89,10 +96,62 @@ namespace TIM_TDL.Application.Services
             var hash = HashPassword(dto.Email, dto.Password);
             if (ifHashesEqual (hash, user.Password)) 
             {
-                return _Mapper.Map<UserDataDto>(user);
+                var result = new TokenInfoDto();
+                result.AccessToken = GenerateBerearToken(user);
+                result.RefreshToken = GenerateRefreshToken(user);
+               
+                return result;
+                
             }
             return new Error();
-            throw new NotImplementedException();
         }
-    }
+
+
+
+        private string GenerateBerearToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_Configuration["Keys:JWT"]!));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var expiry = DateTimeOffset.Now.AddMinutes(15);
+            var userClaims = GetClaimsForUser(user);
+
+            var securityToken = new JwtSecurityToken(
+                issuer: _Configuration["Keys:Issuer"],
+                //audience: _tokenOptions.Audience,
+                claims: userClaims,
+                notBefore: DateTime.Now,
+                expires: expiry.DateTime,
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
+
+        private string GenerateRefreshToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_Configuration["Keys:JWT"]!));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var expiry = DateTimeOffset.Now.AddDays(7);
+            var userClaims = GetClaimsForUser(user);
+
+            var securityToken = new JwtSecurityToken(
+                issuer: _Configuration["Keys:Issuer"],
+                //audience: _tokenOptions.Audience,
+                claims: userClaims,
+                notBefore: DateTime.Now,
+                expires: expiry.DateTime,
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(securityToken);
+        }
+
+        private IEnumerable<Claim> GetClaimsForUser(User user)
+            {
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Email, user.Email));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.ToString()));
+
+                return claims;
+            }
+        }
 }
