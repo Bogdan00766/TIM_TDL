@@ -46,7 +46,7 @@ namespace TIM_TDL.Application.Services
             return hash;
         }
 
-        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(LoginUserDto dto)
+        public async Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterUserDto dto)
         {
             _Logger.Verbose("Register Task in User Service called");
 

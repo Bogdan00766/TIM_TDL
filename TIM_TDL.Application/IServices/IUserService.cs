@@ -12,7 +12,7 @@ namespace TIM_TDL.Application.IServices
 {
     public interface IUserService
     {
-        Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(LoginUserDto dto);
+        Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterUserDto dto);
         OneOf<TokenInfoDto, Error, NotFound> Login(LoginUserDto dto);
     }
 }
