@@ -11,6 +11,5 @@ namespace TIM_TDL.Application.Dtos.User
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public DataTypes.Roles Role { get; set; }
     }
 }
