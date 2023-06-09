@@ -131,6 +131,16 @@ app.MapGet("/api/readJob", (HttpContext context, IJobService jobService) =>
 .WithName("ApiReadJob")
 .WithOpenApi()
 .RequireAuthorization();
+//UPDATE
+
+app.MapPut("/api/updateJob", async (ReadUpdateJobDto dto, HttpContext context, IJobService jobService) =>
+{
+    var result = await jobService.UpdateJobAsync(dto, context);
+    return result;
+})
+.WithName("ApiUpdateJob")
+.WithOpenApi()
+.RequireAuthorization();
 
 
 app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext context, IUserService userService) =>

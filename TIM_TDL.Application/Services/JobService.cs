@@ -49,12 +49,25 @@ namespace TIM_TDL.Application.Services
             await _JobRepository.SaveAsync();
             return _Mapper.Map<NewJobDto>(job);
         }
-        public List<ReadJobDto> ReadJob(HttpContext context)
+        public List<ReadUpdateJobDto> ReadJob(HttpContext context)
         {
             var jobsList = _JobRepository.GetAllUserJobs(TokenUtilities.GetUserIdFromClaims(context));
 
-            return _Mapper.Map<List<ReadJobDto>>(jobsList);
+            return _Mapper.Map<List<ReadUpdateJobDto>>(jobsList);
            
+        }
+        public async Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context)
+        {
+            var user = await _UserRepository.FindByIdAsync(TokenUtilities.GetUserIdFromClaims(context));
+            var job = await _JobRepository.FindByIdAsync(dto.Id);
+            //todo - check user token 
+            job.Name = dto.Name;
+            job.Description = dto.Description;
+            job.DueDate = dto.DueDate;
+            job.Status = dto.Status;
+            await _JobRepository.SaveAsync();
+            return _Mapper.Map<ReadUpdateJobDto>(job);
+
         }
     }
 }

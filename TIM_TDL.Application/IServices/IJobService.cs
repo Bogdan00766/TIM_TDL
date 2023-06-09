@@ -11,6 +11,7 @@ namespace TIM_TDL.Application.IServices
     public interface IJobService
     {
         public Task<NewJobDto> CreateJobAsync(CreateJobDto dto, HttpContext context);
-        public List<ReadJobDto> ReadJob(HttpContext context);
+        public List<ReadUpdateJobDto> ReadJob(HttpContext context);
+        public Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context);
     }
 }

@@ -18,5 +18,6 @@ namespace TIM_TDL.Infrastructure.Repositories
         {
             return _dbContext.Jobs.Where(x => x.Owner.Id == userId).ToList();
         }
+        
     }
 }
