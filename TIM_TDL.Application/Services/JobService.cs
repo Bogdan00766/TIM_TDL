@@ -28,7 +28,7 @@ namespace TIM_TDL.Application.Services
             _Mapper = Mapper;
             _Logger = Logger.ForContext<JobService>();
         }
-        public async Task<NewJobDto> AddJobAsync(CreateJobDto dto)
+        public async Task<NewJobDto> CreateJobAsync(CreateJobDto dto)
         {
             var user = await _UserRepository.FindByIdAsync(dto.UserId);
 

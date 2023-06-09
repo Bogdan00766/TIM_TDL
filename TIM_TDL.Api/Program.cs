@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TIM_TDL.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,7 +81,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRouting();
@@ -110,18 +110,32 @@ app.MapPost("/api/login", (LoginUserDto dto, IUserService userService) =>
 .WithName("ApiLogin")
 .WithOpenApi();
 
-
-
-app.MapPost("/api/job", async (CreateJobDto dto, [FromHeader(Name = "JWTToken")] string token, IJobService jobService) =>
+//CRUD JOB
+//CREATE
+app.MapPost("/api/createJob", async (CreateJobDto dto, [FromHeader(Name = "AccessToken")] string token, IJobService jobService) =>
 {
 
-    var result = await jobService.AddJobAsync(dto);
+    var result = await jobService.CreateJobAsync(dto);
     return result;
 })
 .WithName("ApiJob")
 .WithOpenApi()
 .RequireAuthorization();
+
+
+app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext context, IUserService userService) =>
+{
+    var result = await userService.ChangePasswordAsync(dto, context);
+    return result.Match<IResult>(
+        user => Results.Ok(user),
+        error => Results.StatusCode(500)
+        );
+})
+.WithName("ApiChangePassword")
+.WithOpenApi()
+.RequireAuthorization();
 app.Run();
+
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {

@@ -9,6 +9,6 @@ namespace TIM_TDL.Application.IServices
 {
     public interface IJobService
     {
-        public Task<NewJobDto> AddJobAsync(CreateJobDto dto);
+        public Task<NewJobDto> CreateJobAsync(CreateJobDto dto);
     }
 }
