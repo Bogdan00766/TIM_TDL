@@ -1,4 +1,5 @@
-﻿using OneOf;
+﻿using Microsoft.AspNetCore.Http;
+using OneOf;
 using OneOf.Types;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace TIM_TDL.Application.IServices
     {
         Task<OneOf<UserDataDto, Error, NotFound>> RegisterAsync(RegisterUserDto dto);
         OneOf<TokenInfoDto, Error, NotFound> Login(LoginUserDto dto);
+        Task<OneOf<Success, Error>> ChangePasswordAsync(ChangePasswordUser dto, HttpContext context);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -67,7 +68,6 @@ namespace TIM_TDL.Application.Services
                 _Logger.Error(ex, "Error during inserting new user to database");
             }
             return new Error();  
-            return new NotFound();
         }
         private bool ifHashesEqual(byte[] hash1, byte[] hash2)
         {
@@ -153,5 +153,56 @@ namespace TIM_TDL.Application.Services
 
                 return claims;
             }
+
+
+        private int GetUserIdFromClaims(HttpContext context)
+        {
+            var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (int.TryParse(userIdClaim, out int userId))
+            {
+                return userId;
+            }
+            throw new Exception("Nie można wyciągnąć identyfikatora użytkownika z claima.");
         }
+        private string GetEmailFromClaims(HttpContext context)
+        {
+            var emailClaim = context.User.FindFirstValue(ClaimTypes.Email);
+            if (!string.IsNullOrEmpty(emailClaim))
+            {
+                return emailClaim;
+            }
+            throw new Exception("Nie można pobrać adresu e-mail z claima.");
+        }
+
+
+        public async Task<OneOf<Success, Error>> ChangePasswordAsync(ChangePasswordUser dto, HttpContext context)
+        {
+            int userId = GetUserIdFromClaims(context);
+
+            _Logger.Verbose("Change Password Task in User Service called");
+
+
+            var newPassword = dto.NewPassword;
+            var email = GetEmailFromClaims(context);
+
+            var hashNewPassword = HashPassword(email, newPassword);
+            try
+            {
+                var user = await _UserRepository.FindByIdAsync(userId);
+
+                user.Password = hashNewPassword;
+
+                await _UserRepository.SaveAsync();
+
+                return new Success();
+            }
+            catch(Exception ex) {
+            _Logger.Error(ex, "Error while connecting to database while trying to change password");
+                return new Error();
+            }
+           
+        }
+
+
+    }
 }
