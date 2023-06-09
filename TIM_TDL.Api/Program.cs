@@ -55,7 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidIssuer = builder.Configuration["Keys:Issuer"],
             //IgnoreTrailingSlashWhenValidatingAudience = true,
-            ValidAudience = "audience",
+            ValidAudience = builder.Configuration["Keys:Audience"],
             ValidateAudience = true,
         };
     }
