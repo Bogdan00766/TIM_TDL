@@ -117,7 +117,7 @@ namespace TIM_TDL.Application.Services
 
             var securityToken = new JwtSecurityToken(
                 issuer: _Configuration["Keys:Issuer"],
-                //audience: _tokenOptions.Audience,
+                audience: "audience",
                 claims: userClaims,
                 notBefore: DateTime.Now,
                 expires: expiry.DateTime,

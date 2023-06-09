@@ -19,31 +19,6 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-
-//.AddJwtBearer(options =>
-//{
-//    options.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidateIssuer = false, // Sprawdzanie wydawcy tokenu
-//        ValidateAudience = false, // Sprawdzanie odbiorcy tokenu
-//        ValidateLifetime = true, // Sprawdzanie wa¿noœci tokenu
-//        ValidateIssuerSigningKey = true, // Sprawdzanie klucza uwierzytelniania
-
-//        ValidIssuer = "issuer", // Poprawny wydawca tokenu
-//        ValidAudience = "audience", // Poprawny odbiorca tokenu
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("TakiKluczOTakiKluczOTakiKluczOTakiKluczOTakiKluczOTakiKluczO")) // Klucz uwierzytelniania
-//    };
-//});
-
-//builder.Services.AddAuthorization();
-
-
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
     options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
@@ -78,10 +53,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             RequireSignedTokens = true,
             ValidateIssuer = true,
             ValidateLifetime = true,
-            ValidIssuer = builder.Configuration["Keys:Issuer"]
+            ValidIssuer = builder.Configuration["Keys:Issuer"],
             //IgnoreTrailingSlashWhenValidatingAudience = true,
-            //ValidAudience = "api://my-audience/",
-            //ValidateAudience = true,
+            ValidAudience = "audience",
+            ValidateAudience = true,
         };
     }
     );
@@ -108,7 +83,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
+
 app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
 {
     var result = await userService.RegisterAsync(dto);
