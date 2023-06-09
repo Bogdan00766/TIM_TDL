@@ -106,8 +106,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapPost("/api/register", async (RegisterUserDto dto, IUserService userService) =>
 {
@@ -133,15 +133,18 @@ app.MapPost("/api/login", (LoginUserDto dto, IUserService userService) =>
 .WithName("ApiLogin")
 .WithOpenApi();
 
-app.MapPost("/api/job", async (CreateJobDto dto, [FromHeader(Name = "AccessToken")] string token, IJobService jobService) =>
+//CRUD JOB
+//CREATE
+app.MapPost("/api/createJob", async (CreateJobDto dto, [FromHeader(Name = "AccessToken")] string token, IJobService jobService) =>
 {
 
-    var result = await jobService.AddJobAsync(dto);
+    var result = await jobService.CreateJobAsync(dto);
     return result;
 })
 .WithName("ApiJob")
 .WithOpenApi()
 .RequireAuthorization();
+
 
 app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext context, IUserService userService) =>
 {
@@ -155,6 +158,7 @@ app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext con
 .WithOpenApi()
 .RequireAuthorization();
 app.Run();
+
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
