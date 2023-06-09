@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace TIM_TDL.Application.Kafka
 {
-    internal class KafkaChatQueueMessage
+    public class KafkaChatQueueMessage
     {
+        public int ConnectorId { get; set; }
+        public string Question { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace TIM_TDL.Application.Kafka
         private readonly IHostApplicationLifetime _HostApplicationLifetime;
         private readonly ILogger _Logger;
         private readonly IConfiguration _Config;
-        private readonly IProducer<string, string> _Producer;
+        private readonly IProducer<Null, KafkaChatQueueMessage> _Producer;
         private readonly string? topic;
 
         public KafkaProducer(IConfiguration config, ILogger logger, IHostApplicationLifetime hostApplicationLifetime)
@@ -27,28 +27,36 @@ namespace TIM_TDL.Application.Kafka
             var producerConfig = new ProducerConfig
             {
                 BootstrapServers = _Config["Kafka:BootstrapServer"],
-                ClientId = _Config["Kafka:ClientId"]
             };
             topic = _Config["Kafka:Topic"];
-            
+
             if(producerConfig.BootstrapServers == null || producerConfig.ClientId == null || topic == null) 
             {
                 _Logger.Fatal("Kafka producer config error.");
                 hostApplicationLifetime.StopApplication();
             }
 
-            _Producer = new ProducerBuilder<string, string>(producerConfig).Build();
+            _Producer = new ProducerBuilder<Null, KafkaChatQueueMessage>(producerConfig).Build();
 
         }
 
-        public void SendMessage(int connectorId, string question)
+        public async Task AddToChatQueue(int connectorId, string question)
         {
             var message = new KafkaChatQueueMessage
             {
                 ConnectorId = connectorId,
                 Question = question
             };
-            var deliveryReport = _Producer.ProduceAsync(topic, new Message<Null, string> { Value = message }).GetAwaiter().GetResult();
+            try
+            {
+                await _Producer.ProduceAsync(topic, new Message<Null, KafkaChatQueueMessage> { Value = message });
+            }
+            catch (Exception ex)
+            {
+                _Logger.Error(ex, "Error producing message");
+            }
         }
+
+
     }
 }
