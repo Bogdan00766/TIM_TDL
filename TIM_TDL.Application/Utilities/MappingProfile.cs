@@ -16,6 +16,7 @@ namespace TIM_TDL.Application.Utilities
         {
             CreateMap<User, UserDataDto>();
             CreateMap<Job, NewJobDto>();
+            CreateMap<Job, ReadJobDto>();
         }
     }
 }

@@ -7,7 +7,7 @@ using TIM_TDL.Domain.Utils;
 
 namespace TIM_TDL.Application.Dtos.Job
 {
-    public class CreateJobDto
+    public class ReadJobDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
