@@ -136,12 +136,29 @@ app.MapGet("/api/readJob", (HttpContext context, IJobService jobService) =>
 app.MapPut("/api/updateJob", async (ReadUpdateJobDto dto, HttpContext context, IJobService jobService) =>
 {
     var result = await jobService.UpdateJobAsync(dto, context);
-    return result;
+    return result.Match<IResult>(
+      job => Results.Ok(job),
+      no => Results.Unauthorized(),
+      error => Results.NotFound(error)
+      );
 })
 .WithName("ApiUpdateJob")
 .WithOpenApi()
 .RequireAuthorization();
 
+//DELETE
+app.MapPost("/api/deleteJob", async (DeleteJobDto dto, HttpContext context, IJobService jobService) =>
+{
+    var result = await jobService.DeleteJobAsync(dto, context);
+    return result.Match<IResult>(
+      success => Results.Ok(),
+      no => Results.Unauthorized(),
+      error =>Results.NotFound(error)
+      );
+})
+.WithName("ApiDeleteJob")
+.WithOpenApi()
+.RequireAuthorization();
 
 app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext context, IUserService userService) =>
 {
