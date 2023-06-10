@@ -13,5 +13,11 @@ namespace TIM_TDL.Infrastructure.Repositories
         public JobRepository(TDLDbContext dbContext) : base(dbContext)
         {
         }
+
+        public List<Job> GetAllUserJobs(int userId)
+        {
+            return _dbContext.Jobs.Where(x => x.Owner.Id == userId).ToList();
+        }
+        
     }
 }

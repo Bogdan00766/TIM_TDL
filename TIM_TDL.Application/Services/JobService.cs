@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using TIM_TDL.Application.Dtos.Job;
 using TIM_TDL.Application.Dtos.User;
 using TIM_TDL.Application.IServices;
+using TIM_TDL.Application.Utilities;
 using TIM_TDL.Domain.IRepositories;
 using TIM_TDL.Domain.Models;
 using TIM_TDL.Domain.Utils;
@@ -28,9 +30,9 @@ namespace TIM_TDL.Application.Services
             _Mapper = Mapper;
             _Logger = Logger.ForContext<JobService>();
         }
-        public async Task<NewJobDto> CreateJobAsync(CreateJobDto dto)
+        public async Task<NewJobDto> CreateJobAsync(CreateJobDto dto, HttpContext context)
         {
-            var user = await _UserRepository.FindByIdAsync(dto.UserId);
+            var user = await _UserRepository.FindByIdAsync(TokenUtilities.GetUserIdFromClaims(context));
 
             var job = new Job
             {
@@ -46,6 +48,26 @@ namespace TIM_TDL.Application.Services
             _JobRepository.Create(job);
             await _JobRepository.SaveAsync();
             return _Mapper.Map<NewJobDto>(job);
+        }
+        public List<ReadUpdateJobDto> ReadJob(HttpContext context)
+        {
+            var jobsList = _JobRepository.GetAllUserJobs(TokenUtilities.GetUserIdFromClaims(context));
+
+            return _Mapper.Map<List<ReadUpdateJobDto>>(jobsList);
+           
+        }
+        public async Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context)
+        {
+            var user = await _UserRepository.FindByIdAsync(TokenUtilities.GetUserIdFromClaims(context));
+            var job = await _JobRepository.FindByIdAsync(dto.Id);
+            //todo - check user token 
+            job.Name = dto.Name;
+            job.Description = dto.Description;
+            job.DueDate = dto.DueDate;
+            job.Status = dto.Status;
+            await _JobRepository.SaveAsync();
+            return _Mapper.Map<ReadUpdateJobDto>(job);
+
         }
     }
 }

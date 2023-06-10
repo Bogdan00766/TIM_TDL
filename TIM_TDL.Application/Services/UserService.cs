@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TIM_TDL.Application.Dtos.User;
 using TIM_TDL.Application.IServices;
+using TIM_TDL.Application.Utilities;
 using TIM_TDL.Domain.IRepositories;
 using TIM_TDL.Domain.Models;
 
@@ -155,35 +156,18 @@ namespace TIM_TDL.Application.Services
             }
 
 
-        private int GetUserIdFromClaims(HttpContext context)
-        {
-            var userIdClaim = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (int.TryParse(userIdClaim, out int userId))
-            {
-                return userId;
-            }
-            throw new Exception("Nie można wyciągnąć identyfikatora użytkownika z claima.");
-        }
-        private string GetEmailFromClaims(HttpContext context)
-        {
-            var emailClaim = context.User.FindFirstValue(ClaimTypes.Email);
-            if (!string.IsNullOrEmpty(emailClaim))
-            {
-                return emailClaim;
-            }
-            throw new Exception("Nie można pobrać adresu e-mail z claima.");
-        }
+       
 
 
         public async Task<OneOf<Success, Error>> ChangePasswordAsync(ChangePasswordUser dto, HttpContext context)
         {
-            int userId = GetUserIdFromClaims(context);
+            int userId = TokenUtilities.GetUserIdFromClaims(context);
 
             _Logger.Verbose("Change Password Task in User Service called");
 
 
             var newPassword = dto.NewPassword;
-            var email = GetEmailFromClaims(context);
+            var email = TokenUtilities.GetEmailFromClaims(context);
 
             var hashNewPassword = HashPassword(email, newPassword);
             try

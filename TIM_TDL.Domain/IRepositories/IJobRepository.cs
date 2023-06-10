@@ -9,6 +9,6 @@ namespace TIM_TDL.Domain.IRepositories
 {
     public interface IJobRepository : IRepository<Job>
     {
-
+        List<Job> GetAllUserJobs(int userId);
     }
 }

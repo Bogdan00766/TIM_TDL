@@ -112,13 +112,33 @@ app.MapPost("/api/login", (LoginUserDto dto, IUserService userService) =>
 
 //CRUD JOB
 //CREATE
-app.MapPost("/api/createJob", async (CreateJobDto dto, [FromHeader(Name = "AccessToken")] string token, IJobService jobService) =>
+app.MapPost("/api/createJob", async (CreateJobDto dto, HttpContext context, IJobService jobService) =>
 {
 
-    var result = await jobService.CreateJobAsync(dto);
+    var result = await jobService.CreateJobAsync(dto, context);
     return result;
 })
-.WithName("ApiJob")
+.WithName("ApiCreateJob")
+.WithOpenApi()
+.RequireAuthorization();
+
+//READ
+app.MapGet("/api/readJob", (HttpContext context, IJobService jobService) =>
+{
+    var result = jobService.ReadJob(context);
+    return result;
+})
+.WithName("ApiReadJob")
+.WithOpenApi()
+.RequireAuthorization();
+//UPDATE
+
+app.MapPut("/api/updateJob", async (ReadUpdateJobDto dto, HttpContext context, IJobService jobService) =>
+{
+    var result = await jobService.UpdateJobAsync(dto, context);
+    return result;
+})
+.WithName("ApiUpdateJob")
 .WithOpenApi()
 .RequireAuthorization();
 
