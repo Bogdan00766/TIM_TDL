@@ -17,8 +17,11 @@ using System.Security.Claims;
 using TIM_TDL.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using TIM_TDL.Application.WebSocket;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSignalR();
+
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
@@ -171,6 +174,9 @@ app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext con
 .WithName("ApiChangePassword")
 .WithOpenApi()
 .RequireAuthorization();
+
+app.MapHub<ChatWebSocket>("/api/chat");
+
 app.Run();
 
 
