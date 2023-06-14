@@ -18,6 +18,7 @@ using TIM_TDL.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using TIM_TDL.Application.WebSocket;
+using TIM_TDL.Application.Kafka;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSignalR();
@@ -72,6 +73,9 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton(typeof(KafkaConsumer));
+builder.Services.AddSingleton(typeof(KafkaProducer));
+
 
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
