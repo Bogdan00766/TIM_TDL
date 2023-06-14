@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TIM_TDL.Infrastructure;
 
@@ -10,9 +11,11 @@ using TIM_TDL.Infrastructure;
 namespace TIM_TDL.Infrastructure.Migrations
 {
     [DbContext(typeof(TDLDbContext))]
-    partial class TDLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230614175110_EmailUnique")]
+    partial class EmailUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");

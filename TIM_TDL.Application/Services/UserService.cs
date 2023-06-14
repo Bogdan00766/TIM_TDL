@@ -66,7 +66,7 @@ namespace TIM_TDL.Application.Services
             }
             catch (Exception ex)
             {
-                _Logger.Error(ex, "Error during inserting new user to database");
+                _Logger.Error(ex, "Error during inserting new user to database or email is already register. Ask admin for information");
             }
             return new Error();  
         }

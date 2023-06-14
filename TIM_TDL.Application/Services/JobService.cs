@@ -1,5 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using OneOf;
+using OneOf.Types;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -56,18 +60,41 @@ namespace TIM_TDL.Application.Services
             return _Mapper.Map<List<ReadUpdateJobDto>>(jobsList);
            
         }
-        public async Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context)
+        public async Task<OneOf<ReadUpdateJobDto,No, Error>> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context)
         {
             var user = await _UserRepository.FindByIdAsync(TokenUtilities.GetUserIdFromClaims(context));
             var job = await _JobRepository.FindByIdAsync(dto.Id);
-            //todo - check user token 
+            if (job is null) return new Error();
+            //check whether user is editing its tasks
+            if (job.Owner.Id != user.Id)
+            {
+                // Użytkownik nie ma uprawnień do edycji tego zadania
+                return new No();
+            }
             job.Name = dto.Name;
             job.Description = dto.Description;
             job.DueDate = dto.DueDate;
             job.Status = dto.Status;
+
             await _JobRepository.SaveAsync();
             return _Mapper.Map<ReadUpdateJobDto>(job);
 
+        }
+
+        public async Task<OneOf<Success, No, Error>> DeleteJobAsync(DeleteJobDto dto, HttpContext context)
+        {
+            var user = await _UserRepository.FindByIdAsync(TokenUtilities.GetUserIdFromClaims(context));
+            var job = await _JobRepository.FindByIdAsync(dto.Id);
+            if (job is null) return new Error();
+            if (job.Owner.Id != user.Id)
+            {
+                // Użytkownik nie ma uprawnień do edycji tego zadania
+                return new No();
+            }
+
+             _JobRepository.Delete(job);
+            await _JobRepository.SaveAsync();
+            return new Success();
         }
     }
 }

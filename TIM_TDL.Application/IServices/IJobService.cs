@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using OneOf.Types;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace TIM_TDL.Application.IServices
     {
         public Task<NewJobDto> CreateJobAsync(CreateJobDto dto, HttpContext context);
         public List<ReadUpdateJobDto> ReadJob(HttpContext context);
-        public Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context);
+        public Task<OneOf<ReadUpdateJobDto,No, Error>> UpdateJobAsync(ReadUpdateJobDto dto, HttpContext context);
+        public Task<OneOf<Success, No, Error>> DeleteJobAsync(DeleteJobDto dto, HttpContext context);
     }
 }

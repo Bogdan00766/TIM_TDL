@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TIM_TDL.Application.Dtos.Job
 {
-    internal class DeleteJobDto
+    public class DeleteJobDto
     {
         public int Id { get; set; }
     }

@@ -17,8 +17,11 @@ using System.Security.Claims;
 using TIM_TDL.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using TIM_TDL.Application.WebSocket;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSignalR();
+
 
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
 {
@@ -136,12 +139,29 @@ app.MapGet("/api/readJob", (HttpContext context, IJobService jobService) =>
 app.MapPut("/api/updateJob", async (ReadUpdateJobDto dto, HttpContext context, IJobService jobService) =>
 {
     var result = await jobService.UpdateJobAsync(dto, context);
-    return result;
+    return result.Match<IResult>(
+      job => Results.Ok(job),
+      no => Results.Unauthorized(),
+      error => Results.NotFound(error)
+      );
 })
 .WithName("ApiUpdateJob")
 .WithOpenApi()
 .RequireAuthorization();
 
+//DELETE
+app.MapPost("/api/deleteJob", async (DeleteJobDto dto, HttpContext context, IJobService jobService) =>
+{
+    var result = await jobService.DeleteJobAsync(dto, context);
+    return result.Match<IResult>(
+      success => Results.Ok(),
+      no => Results.Unauthorized(),
+      error =>Results.NotFound(error)
+      );
+})
+.WithName("ApiDeleteJob")
+.WithOpenApi()
+.RequireAuthorization();
 
 app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext context, IUserService userService) =>
 {
@@ -154,6 +174,10 @@ app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext con
 .WithName("ApiChangePassword")
 .WithOpenApi()
 .RequireAuthorization();
+
+
+app.MapHub<ChatWebSocket>("/api/chat");
+
 app.Run();
 
 
