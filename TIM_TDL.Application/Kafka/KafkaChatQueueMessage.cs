@@ -9,6 +9,7 @@ namespace TIM_TDL.Application.Kafka
     public class KafkaChatQueueMessage
     {
         public int ConnectorId { get; set; }
+        public string WSGroupId { get; set; }
         public string Question { get; set; }
     }
 }
