@@ -175,6 +175,7 @@ app.MapPut("/api/changePassword", async (ChangePasswordUser dto, HttpContext con
 .WithOpenApi()
 .RequireAuthorization();
 
+
 app.MapHub<ChatWebSocket>("/api/chat");
 
 app.Run();
