@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobileApp.Utils;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,6 +9,7 @@ namespace MobileApp
     {
         public App()
         {
+            Config.Initialize();
             InitializeComponent();
 
             MainPage = new NavigationPage(new MainPage());
