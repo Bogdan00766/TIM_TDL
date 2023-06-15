@@ -17,7 +17,8 @@ namespace MobileApp
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-
+            DisplayAlert("Login", "Successful login", "Ok");
+            Navigation.PushAsync(new HomePage(UsernameEntry.Text));
         }
     }
 }

@@ -8,11 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TIM_TDL.Domain", "TIM_TDL.Domain\TIM_TDL.Domain.csproj", "{D1A76C22-9882-4844-B080-2BE55F776B46}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TIM_TDL.Infrastructure", "TIM_TDL.Infrastructure\TIM_TDL.Infrastructure.csproj", "{21DF613C-49E6-4091-95A2-6CE46E3448D6}"
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TIM_TDL.Infrastructure", "TIM_TDL.Infrastructure\TIM_TDL.Infrastructure.csproj", "{21DF613C-49E6-4091-95A2-6CE46E3448D6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TIM_TDL.Application", "TIM_TDL.Application\TIM_TDL.Application.csproj", "{948797FD-B2B1-41DA-A375-16B52B876025}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TIM_TDL.Application", "TIM_TDL.Application\TIM_TDL.Application.csproj", "{948797FD-B2B1-41DA-A375-16B52B876025}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{13A7377F-14C3-46B6-B0F2-6F15CAA3EB1C}"
 	ProjectSection(SolutionItems) = preProject
 		.env = .env
@@ -23,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileApp.Android", "Mobile
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileApp.iOS", "MobileApp\MobileApp.iOS\MobileApp.iOS.csproj", "{ED9F1CCB-F9BA-4615-BAB2-8DD21DB99D9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileApp", "MobileApp\MobileApp\MobileApp.csproj", "{93D43158-F94A-430F-B952-B416DBB1FB08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MobileApp", "MobileApp\MobileApp\MobileApp.csproj", "{93D43158-F94A-430F-B952-B416DBB1FB08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
