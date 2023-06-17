@@ -17,13 +17,13 @@ namespace MobileApp
             InitializeComponent();
         }
 
-        private async Task Button_ClickedAsync(object sender, EventArgs e)
-        {
-            HttpClient client= new HttpClient();
+        private void Button_Clicked(object sender, EventArgs e)
+        {//task
+            //HttpClient client= new HttpClient();
 
             //var response = await client.PostAsync(Config.Data.ApiUrl + "/api/login/",) //configi do zmiany api w jednym miejscu a nie - nazwać buttony i odpowiadajace metody nazwa buttona - LoginButton
-            await DisplayAlert("Login", "Successful login", "Ok");
-            await Navigation.PushAsync(new HomePage(UsernameEntry.Text));
+            DisplayAlert("Login", "Successful login", "Ok");
+            Navigation.PushAsync(new HomePage(UsernameEntry.Text));
         }
     }
 }

@@ -8,17 +8,16 @@ namespace MobileApp.Utils
 {
     public static class Config
     {
+        public static ConfigClass Data { get; set; }
         public static void Initialize()
         {
 
-            string json = File.ReadAllText("config.json");
+           // string json = File.ReadAllText("Utils/config.json");
 
             // Deserializuj zawartość pliku JSON do obiektu
-            var config = JsonConvert.DeserializeObject<ConfigClass>(json);
+            //Data = JsonConvert.DeserializeObject<ConfigClass>(json);
 
-            // Użyj wartości z obiektu config
-            string apiKey = config.ApiKey;
-            string apiUrl = config.ApiUrl;
+           
             // itd.
         }
 
