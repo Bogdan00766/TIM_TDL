@@ -70,11 +70,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-
+builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton(typeof(KafkaConsumer));
 builder.Services.AddSingleton(typeof(KafkaProducer));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", builder => 
+    builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
 
 
 builder.Services.AddScoped<IJobService, JobService>();
