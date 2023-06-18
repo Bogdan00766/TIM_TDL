@@ -107,23 +107,9 @@ namespace TIM_TDL.Application.WebSocket
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
-            _Queue.Remove(Context.ConnectionId);
+             _Queue.Remove(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
-
-        //dodawanie uz do listy ocz. - odróżnić połączonych użytkowników
-        //ondisconnected
-        //mogę wywołać jako klient websocketowe (handle onConnected)
-
-        //wysłać handshake do websocketu bo hub nie ogarnia
-        //handshake klienta (postmana) z websocketem (aplikacja)
-
-        //tworzenie grup i łączenie do nich
-
-
-
-
-
     }
 
     public class ChatMessage
