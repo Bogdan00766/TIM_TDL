@@ -10,14 +10,14 @@
 
     <StackLayout Orientation="Vertical" >
         <StackLayout Padding="0,80,0,0">
-            <Label Text="UserName xxxx" TextColor="Black"></Label>
+            <Label Text="Email" TextColor="Black"></Label>
             <Entry Text="{Binding Email}" Placeholder="Email" x:Name="UsernameEntry"></Entry>
             <Label Text="Password" TextColor="Black"></Label>
             <Entry Text="{Binding Password}" Placeholder="Hasło" IsPassword="True"></Entry>
             <Button Command ="{Binding RegisterCommand }" Text="Register" BackgroundColor="White" TextColor="Aqua"></Button>
-            <Label Text="{Binding Message}"></Label>
-
-            <Label Text="Nie masz konta? Zarejestruj się!" TextColor="Gray" HorizontalOptions="Center"></Label>
+            <Label Text="Masz już konto? Zaloguj się!" TextColor="Gray" HorizontalOptions="Center">
+            </Label>
+            <Button Text="Logowanie" BackgroundColor="White" TextColor="Aqua" Clicked="Button_ClickedAsync"></Button>
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -8,29 +8,30 @@ using Xamarin.Forms;
 
 namespace MobileApp.ViewModels
 {
-    internal class RegisterViewModel
+    internal class LoginViewModel
     {
         ApiServices _apiServices = new ApiServices();
         public string Email { get; set; }
         public string Password { get; set; }
         public string Message { get; set; }
-        public ICommand RegisterCommand
+        private INavigation Navigation;
+        public ICommand LoginCommand
         {
             get
             {
                 return new Command(async () =>
                 {
-                    var isSuccess = await _apiServices.RegisterAsync(Email, Password);
+                    var isSuccess = await _apiServices.LoginAsync(Email, Password);
 
                     if (isSuccess)
                     {
                         //TODO _Logger.Information("User of id: {id} and email: {email} added sucessfully", Email, Password);
-                        await App.Current.MainPage.DisplayAlert("Success", "Registered successfully", "OK");
-                        await App.Current.MainPage.Navigation.PushAsync(new MainPage());
+                        await App.Current.MainPage.DisplayAlert("Success", "Login successfully", "OK");
+                        await Navigation.PushAsync(new MainPage());
                     }
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Failed", "Failed to register an ", "OK");
+                        await App.Current.MainPage.DisplayAlert("Failed", "Failed to login", "OK");
                     }
                 });
             }
