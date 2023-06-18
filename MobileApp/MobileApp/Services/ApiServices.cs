@@ -6,7 +6,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using TIM_TDL.Application.Dtos.User;
+using TIM_TDL.MobileApp.Dtos.Job;
+using TIM_TDL.MobileApp.Dtos.User;
 using static System.Net.WebRequestMethods;
 
 namespace MobileApp.Services
@@ -84,7 +85,25 @@ namespace MobileApp.Services
             return resp;
             //return response.IsSuccessStatusCode;
         }
+        public async Task<List<ReadUpdateJobDto>> GetJobs(string userId)
+        {
+            var url = $"https://example.com/api/jobs?userId={userId}";
+            //do naglowka token
 
+            var response = await httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var jobsList = JsonConvert.DeserializeObject<List<ReadUpdateJobDto>>(content);
+                return jobsList;
+            }
+            else
+            {
+                // Obsługa błędu, np. wyświetlenie komunikatu o błędzie
+                return null;
+            }
+        }
 
 
     }

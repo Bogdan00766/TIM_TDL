@@ -17,7 +17,7 @@ namespace MobileApp.View
         {
             InitializeComponent();
             this.email = email; 
-            EmailLabel.Text = email;
+            EmailLabel.Text ="Hello " + email;
         }
     }
 }
