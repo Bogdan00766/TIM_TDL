@@ -26,7 +26,7 @@ namespace MobileApp.ViewModels
                     {
                         //TODO _Logger.Information("User of id: {id} and email: {email} added sucessfully", Email, Password);
                         await App.Current.MainPage.DisplayAlert("Success", "Registered successfully", "OK");
-                        await App.Current.MainPage.Navigation.PushAsync(new MainPage());
+                        await App.Current.MainPage.Navigation.PushAsync(new MainPage(Email));
                     }
                     else
                     {

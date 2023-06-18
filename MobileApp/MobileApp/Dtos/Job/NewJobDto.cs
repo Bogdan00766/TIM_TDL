@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TIM_TDL.Domain.Utils;
 
-namespace TIM_TDL.Application.Dtos.Job
+namespace TIM_TDL.MobileApp.Dtos.Job
 {
     public class NewJobDto
     {

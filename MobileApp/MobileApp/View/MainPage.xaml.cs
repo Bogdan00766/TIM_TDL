@@ -12,9 +12,12 @@ namespace MobileApp.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : ContentPage
     {
-        public MainPage()
+        private string email;
+        public MainPage(string email)
         {
             InitializeComponent();
+            this.email = email; 
+            EmailLabel.Text = email;
         }
     }
 }

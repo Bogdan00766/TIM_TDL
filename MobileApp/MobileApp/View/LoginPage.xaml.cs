@@ -20,6 +20,7 @@ namespace MobileApp.View
 
         private async void Button_ClickedAsync(object sender, EventArgs e)
         {
+            await Navigation.PopAsync();
             await Navigation.PushAsync(new RegisterPage());
         }
     }

@@ -8,7 +8,7 @@ using System.Windows.Input;
 using TIM_TDL.Domain.Utils;
 using Xamarin.Forms;
 
-namespace TIM_TDL.Application.Dtos.User
+namespace TIM_TDL.MobileApp.Dtos.User
 {
     public class RegisterUserDto
     {

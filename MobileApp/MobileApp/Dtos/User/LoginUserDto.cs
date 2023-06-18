@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TIM_TDL.Application.Dtos.User
+namespace TIM_TDL.MobileApp.Dtos.User
 {
     public class LoginUserDto
     {

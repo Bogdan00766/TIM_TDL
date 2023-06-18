@@ -13,10 +13,17 @@ namespace MobileApp.Services
 {
     public class ApiServices
     {
+        private HttpClient httpClient;
+
+        public ApiServices()
+        {
+            httpClient = new HttpClient();
+        }
+
         public string link = "http://192.168.77.45:5004";
         public async Task <bool> RegisterAsync(string email,  string password)
         {
-            var client = new HttpClient();
+            var client = httpClient;
             var model = new RegisterUserDto 
             { 
              Email = email, 
@@ -48,7 +55,7 @@ namespace MobileApp.Services
 
         public async Task<bool> LoginAsync(string email, string password)
         {
-            var client = new HttpClient();
+            var client = httpClient;
             var model = new LoginUserDto
             {
                 Email = email,
@@ -77,5 +84,8 @@ namespace MobileApp.Services
             return resp;
             //return response.IsSuccessStatusCode;
         }
+
+
+
     }
 }
