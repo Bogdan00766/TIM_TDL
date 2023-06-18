@@ -75,6 +75,10 @@ namespace MobileApp.Services
                 var response = await client.PostAsync(uri, content);
                 resp = response.IsSuccessStatusCode;
 
+
+                string responseJson = await response.Content.ReadAsStringAsync();
+                MyResponseObject responseObject = JsonConvert.DeserializeObject<MyResponseObject>(responseJson);
+
             }
             catch (Exception ex)
             {
