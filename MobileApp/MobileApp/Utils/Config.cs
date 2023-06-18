@@ -12,11 +12,11 @@ namespace MobileApp.Utils
         public static void Initialize()
         {
 
-           // string json = File.ReadAllText("Utils/config.json");
+           //string json = File.ReadAllText("Utils/config.json");
 
             // Deserializuj zawartość pliku JSON do obiektu
-            //Data = JsonConvert.DeserializeObject<ConfigClass>(json);
-
+          // Data = JsonConvert.DeserializeObject<ConfigClass>(json);
+            
            
             // itd.
         }

@@ -1,4 +1,5 @@
 ﻿using MobileApp.Utils;
+using MobileApp.View;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,7 +13,8 @@ namespace MobileApp
             Config.Initialize();
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+           //MainPage = new MainPage();
+            MainPage = new NavigationPage(new RegisterPage());
         }
 
         protected override void OnStart()

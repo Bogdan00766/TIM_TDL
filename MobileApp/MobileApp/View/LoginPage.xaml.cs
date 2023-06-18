@@ -1,4 +1,5 @@
 ﻿using MobileApp.Utils;
+using MobileApp.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,12 +8,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace MobileApp
 {
-    public partial class MainPage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class LoginPage : ContentPage
     {
-        public MainPage()
+        public LoginPage()
         {
             InitializeComponent();
         }
@@ -23,7 +26,7 @@ namespace MobileApp
 
             //var response = await client.PostAsync(Config.Data.ApiUrl + "/api/login/",) //configi do zmiany api w jednym miejscu a nie - nazwać buttony i odpowiadajace metody nazwa buttona - LoginButton
             DisplayAlert("Login", "Successful login", "Ok");
-            Navigation.PushAsync(new HomePage(UsernameEntry.Text));
+            Navigation.PushAsync(new MainPage());
         }
     }
 }

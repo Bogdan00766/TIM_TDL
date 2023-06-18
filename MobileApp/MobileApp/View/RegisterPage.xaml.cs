@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace MobileApp
+namespace MobileApp.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class HomePage : ContentPage
+    public partial class RegisterPage : ContentPage
     {
-        public HomePage(string username)
+        public RegisterPage()
         {
             InitializeComponent();
-            Appusername.Text = "Hello " + username;
         }
     }
 }
