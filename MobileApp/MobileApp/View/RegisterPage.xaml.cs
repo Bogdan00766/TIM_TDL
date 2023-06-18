@@ -16,5 +16,6 @@ namespace MobileApp.View
         {
             InitializeComponent();
         }
+       
     }
 }

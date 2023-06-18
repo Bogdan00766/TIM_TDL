@@ -30,13 +30,15 @@ namespace MobileApp.Services
             var resp = false;
             try
             {
-                string uri = "http://192.168.77.45:5004/api/register";
+                string uri = "http://192.168.77.45:5004/api/login";
                 var response = await client.PostAsync(uri, content);
                 resp = response.IsSuccessStatusCode;
+               
             }
             catch (Exception ex)
             {
                 var message = ex.Message;
+                resp = false;
                 throw;
             }
 

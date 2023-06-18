@@ -1,4 +1,5 @@
 ﻿using MobileApp.Services;
+using MobileApp.View;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +25,8 @@ namespace MobileApp.ViewModels
                     if (isSuccess)
                     {
                         //TODO _Logger.Information("User of id: {id} and email: {email} added sucessfully", Email, Password);
-                        Message = "Registered successfully";
+                        await App.Current.MainPage.DisplayAlert("Success", "Registered successfully", "OK");
+                        await App.Current.MainPage.Navigation.PushAsync(new MainPage());
                     }
                     else
                     {
