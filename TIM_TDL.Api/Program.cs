@@ -90,9 +90,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-
+builder.Services.AddControllers();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton(typeof(KafkaConsumer));
+builder.Services.AddSingleton(typeof(KafkaProducer));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", builder => 
+    builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+});
 
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
@@ -144,6 +153,10 @@ app.MapPost("/api/job", async (CreateJobDto dto, [FromHeader(Name = "JWTToken")]
 .WithName("ApiJob")
 .WithOpenApi()
 .RequireAuthorization();
+
+
+app.MapHub<ChatWebSocket>("/api/chat");
+
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
