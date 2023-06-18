@@ -10,17 +10,15 @@ using Xamarin.Forms.Xaml;
 namespace MobileApp.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RegisterPage : ContentPage
-    {
-        private INavigation navigation;
+    public partial class RegisterPage : ContentPage { 
+
         public RegisterPage()
         {
             InitializeComponent();
-            navigation = Navigation;
         }
         private async void Button_ClickedAsync(object sender, EventArgs e)
         {
-            await navigation.PushAsync(new NavigationPage(new LoginPage()));
+            await Navigation.PushAsync(new LoginPage());
 
 
         }

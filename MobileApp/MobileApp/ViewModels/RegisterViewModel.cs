@@ -30,7 +30,7 @@ namespace MobileApp.ViewModels
                     }
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Failed", "Failed to register an ", "OK");
+                        await App.Current.MainPage.DisplayAlert("Failed", "Failed to register", "OK");
                     }
                 });
             }

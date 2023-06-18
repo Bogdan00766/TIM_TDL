@@ -12,16 +12,15 @@ namespace MobileApp.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        private INavigation navigation;
+
         public LoginPage()
         {
             InitializeComponent();
-            navigation = Navigation;
         }
 
         private async void Button_ClickedAsync(object sender, EventArgs e)
         {
-            await navigation.PushAsync(new NavigationPage(new RegisterPage()));
+            await Navigation.PushAsync(new RegisterPage());
         }
     }
 }
