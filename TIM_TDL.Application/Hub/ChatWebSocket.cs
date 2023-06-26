@@ -39,7 +39,7 @@ namespace TIM_TDL.Application.WebSocket
                 ChatId = chatId
             };
 
-            await Clients.Group(chatId).SendAsync(JsonConvert.SerializeObject(chatMessage));
+            await Clients.Group(chatId).SendAsync("Tomek", JsonConvert.SerializeObject(chatMessage));
         }
 
         public async Task RegisterToQueue(int id, string question)
@@ -57,7 +57,7 @@ namespace TIM_TDL.Application.WebSocket
             await _KafkaProducer.AddToChatQueue(kafkaChatQueueMessage);
 
             _Queue.Add(Context.ConnectionId, guid);
-            await Clients.Group(guid).SendAsync("Sucessfully added to queue");
+            await Clients.Group(guid).SendAsync("Tomek","Sucessfully added to queue");
 
 
         }
@@ -80,7 +80,7 @@ namespace TIM_TDL.Application.WebSocket
                         SenderId = adminId,
                         ChatId = null
                     };
-                    await Clients.Caller.SendAsync(JsonConvert.SerializeObject(chatMessage));
+                    await Clients.Caller.SendAsync("Tomek", JsonConvert.SerializeObject(chatMessage));
                     return;
                 }
                 if (_Queue.ContainsValue(message.WSGroupId))
@@ -99,9 +99,9 @@ namespace TIM_TDL.Application.WebSocket
             };
             _Logger.Debug("WYSYŁAM");
             if (message != null)
-                await Clients.Group(message!.WSGroupId).SendAsync(JsonConvert.SerializeObject(chatMessage));
+                await Clients.Group(message!.WSGroupId).SendAsync("Tomek", JsonConvert.SerializeObject(chatMessage));
             else
-                await Clients.Caller.SendAsync(JsonConvert.SerializeObject(chatMessage));
+                await Clients.Caller.SendAsync("Tomek", JsonConvert.SerializeObject(chatMessage));
         }
 
 
