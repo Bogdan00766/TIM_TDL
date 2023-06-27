@@ -1,5 +1,6 @@
 ﻿using MobileApp.Dtos.User;
 using MobileApp.Services;
+using MobileApp.Utils;
 using MobileApp.View;
 using Newtonsoft.Json;
 using System;
@@ -33,7 +34,11 @@ namespace MobileApp.ViewModels
                         var content = await response.Content.ReadAsStringAsync();
                         var userTokenInfo = JsonConvert.DeserializeObject<UserTokenInfoDto>(content);
 
-                        await App.Current.MainPage.Navigation.PushAsync(new MainPage(userTokenInfo));
+                        CurrentUser.AccessToken = userTokenInfo.AccessToken;
+                        CurrentUser.RefreshToken = userTokenInfo.RefreshToken;
+                        CurrentUser.Email = Email;
+
+                        await App.Current.MainPage.Navigation.PushAsync(new MainPage());
                     }
                     else
                     {

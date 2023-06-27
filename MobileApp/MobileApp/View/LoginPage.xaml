@@ -2,10 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MobileApp.View.LoginPage"
-             xmlns:dtos="clr-namespace:MobileApp.ViewModels;assembly=MobileApp">
+             xmlns:viewModels="clr-namespace:MobileApp.ViewModels;assembly=MobileApp">
 
     <ContentPage.BindingContext>
-        <dtos:LoginViewModel/>
+        <viewModels:LoginViewModel/>
     </ContentPage.BindingContext>
 
     <StackLayout Orientation="Vertical" >

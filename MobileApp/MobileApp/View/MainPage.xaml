@@ -1,10 +1,10 @@
 ﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MobileApp.View.MainPage"
-             xmlns:dtos="clr-namespace:MobileApp.ViewModels;assembly=MobileApp">
-
+             xmlns:viewModels="clr-namespace:MobileApp.ViewModels;assembly=MobileApp">
+    
     <ContentPage.BindingContext>
-        <dtos:MainViewModel/>
+        <viewModels:MainViewModel/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
@@ -18,20 +18,12 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <StackLayout VerticalOptions="FillAndExpand">
-                                    <Label Text="Element 1" FontSize="18" FontAttributes="Bold" />
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
                                     <Label Text="{Binding Name}" FontSize="14" />
                                     <Label Text="{Binding Description}" FontSize="14" />
                                     <Label Text="{Binding DueDate}" FontSize="14" />
                                     <Label Text="{Binding Status}" FontSize="14" />
                                 </StackLayout>
-
-                                <StackLayout VerticalOptions="FillAndExpand" Grid.Row="1">
-                                    <Label Text="Element 2" FontSize="18" FontAttributes="Bold" />
-                                    <!-- Dodaj kolejne etykiety dla parametrów elementu 2 -->
-                                </StackLayout>
-
-                                <!-- Dodaj kolejne bloki parametrów dla innych elementów -->
 
                             </Grid>
                         </ViewCell>

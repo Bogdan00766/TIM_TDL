@@ -15,10 +15,15 @@ namespace MobileApp.View
     public partial class MainPage : ContentPage
     {
         private MainViewModel viewModel;
-        public MainPage(UserTokenInfoDto userTokenInfo)
+        public MainPage()
         {
             InitializeComponent();
-            viewModel = new MainViewModel(userTokenInfo);
+            ToolbarItems.Add(new ToolbarItem("Add", "Add.png", async () =>
+            {
+                await Navigation.PushAsync(new AddJobPage());
+            }));
+
+            viewModel = new MainViewModel();
             BindingContext = viewModel;
             viewModel.GetJobs();
             //this.userTokenInfo.Email = userTokenInfo.Email;

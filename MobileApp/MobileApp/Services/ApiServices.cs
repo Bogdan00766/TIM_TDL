@@ -14,17 +14,43 @@ namespace MobileApp.Services
 {
     public class ApiServices
     {
-        private HttpClient httpClient;
-
+        private readonly HttpClient _HttpClient;
+        private string _Url = "http://192.168.0.52:5004/";
+        
         public ApiServices()
         {
-            httpClient = new HttpClient();
+            _HttpClient = new HttpClient();
+            _HttpClient.BaseAddress = new Uri(_Url);
+            
         }
 
-        public string link = "http://192.168.0.52:5004";
+        public async Task<ReadUpdateJobDto> AddJobAsync(CreateJobDto dto)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                var json = JsonConvert.SerializeObject(dto);
+                HttpContent content = new StringContent(json);
+                _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CurrentUser.AccessToken);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await _HttpClient.PostAsync("api/createJob", content);
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<ReadUpdateJobDto>(await response.Content.ReadAsStringAsync());
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
+
+
         public async Task<bool> RegisterAsync(string email, string password)
         {
-            var client = httpClient;
+            var client = _HttpClient;
             var model = new RegisterUserDto
             {
                 Email = email,
@@ -39,7 +65,7 @@ namespace MobileApp.Services
             var resp = false;
             try
             {
-                string uri = link + "/api/register";
+                string uri = "api/register";
                 var response = await client.PostAsync(uri, content);
                 resp = response.IsSuccessStatusCode;
 
@@ -56,7 +82,7 @@ namespace MobileApp.Services
 
         public async Task<HttpResponseMessage> LoginAsync(string email, string password)
         {
-            var client = httpClient;
+            var client = _HttpClient;
             var model = new LoginUserDto
             {
                 Email = email,
@@ -71,7 +97,7 @@ namespace MobileApp.Services
             var resp = false;
             try
             {
-                string uri = link + "/api/login";
+                string uri = "/api/login";
                 var response = await client.PostAsync(uri, content);
                 return response;
 
@@ -88,16 +114,16 @@ namespace MobileApp.Services
             
             //return response.IsSuccessStatusCode;
         }
-        public async Task<List<ReadUpdateJobDto>> GetJobsAsync(string accessToken)
+        public async Task<List<ReadUpdateJobDto>> GetJobsAsync()
         {
             try
             {
 
-                var uri = link + "/api/readJob";
+                var uri = "/api/readJob";
                 //do naglowka token
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CurrentUser.AccessToken);
 
-                var response = await httpClient.GetAsync(uri);
+                var response = await _HttpClient.GetAsync(uri);
 
                 if (response.IsSuccessStatusCode)
                 {
