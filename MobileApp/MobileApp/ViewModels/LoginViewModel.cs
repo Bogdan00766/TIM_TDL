@@ -1,9 +1,12 @@
-﻿using MobileApp.Services;
+﻿using MobileApp.Dtos.User;
+using MobileApp.Services;
 using MobileApp.View;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using TIM_TDL.MobileApp.Dtos.User;
 using Xamarin.Forms;
 
 namespace MobileApp.ViewModels
@@ -21,13 +24,16 @@ namespace MobileApp.ViewModels
             {
                 return new Command(async () =>
                 {
-                    var isSuccess = await _apiServices.LoginAsync(Email, Password);
+                    var response = await _apiServices.LoginAsync(Email, Password);
 
-                    if (isSuccess)
+                    if (response.IsSuccessStatusCode)
                     {
                         //TODO _Logger.Information("User of id: {id} and email: {email} added sucessfully", Email, Password);
                         await App.Current.MainPage.DisplayAlert("Success", "Login successfully", "OK");
-                        await App.Current.MainPage.Navigation.PushAsync(new MainPage(Email));
+                        var content = await response.Content.ReadAsStringAsync();
+                        var userTokenInfo = JsonConvert.DeserializeObject<UserTokenInfoDto>(content);
+
+                        await App.Current.MainPage.Navigation.PushAsync(new MainPage(userTokenInfo));
                     }
                     else
                     {

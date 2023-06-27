@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MobileApp.Dtos.User;
+using MobileApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +14,16 @@ namespace MobileApp.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : ContentPage
     {
-        private string email;
-        public MainPage(string email)
+        private MainViewModel viewModel;
+        public MainPage(UserTokenInfoDto userTokenInfo)
         {
             InitializeComponent();
-            this.email = email; 
-            EmailLabel.Text ="Hello " + email;
+            viewModel = new MainViewModel(userTokenInfo);
+            BindingContext = viewModel;
+            viewModel.GetJobs();
+            //this.userTokenInfo.Email = userTokenInfo.Email;
+            //  this.userTokenInfo.AccessToken = userTokenInfo.AccessToken;
+            // this.userTokenInfo.RefreshToken = userTokenInfo.RefreshToken;
         }
     }
 }

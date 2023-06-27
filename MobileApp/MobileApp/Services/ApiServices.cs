@@ -21,14 +21,14 @@ namespace MobileApp.Services
             httpClient = new HttpClient();
         }
 
-        public string link = "http://192.168.77.45:5004";
-        public async Task <bool> RegisterAsync(string email,  string password)
+        public string link = "http://192.168.0.52:5004";
+        public async Task<bool> RegisterAsync(string email, string password)
         {
             var client = httpClient;
-            var model = new RegisterUserDto 
-            { 
-             Email = email, 
-             Password = password 
+            var model = new RegisterUserDto
+            {
+                Email = email,
+                Password = password
             };
             var json = JsonConvert.SerializeObject(model);
 
@@ -39,10 +39,10 @@ namespace MobileApp.Services
             var resp = false;
             try
             {
-                string uri = link+"/api/register"; 
+                string uri = link + "/api/register";
                 var response = await client.PostAsync(uri, content);
                 resp = response.IsSuccessStatusCode;
-               
+
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace MobileApp.Services
             //return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<HttpResponseMessage> LoginAsync(string email, string password)
         {
             var client = httpClient;
             var model = new LoginUserDto
@@ -73,11 +73,10 @@ namespace MobileApp.Services
             {
                 string uri = link + "/api/login";
                 var response = await client.PostAsync(uri, content);
-                resp = response.IsSuccessStatusCode;
+                return response;
 
 
-                string responseJson = await response.Content.ReadAsStringAsync();
-                MyResponseObject responseObject = JsonConvert.DeserializeObject<MyResponseObject>(responseJson);
+                //MyResponseObject responseObject = JsonConvert.DeserializeObject<MyResponseObject>(responseJson);
 
             }
             catch (Exception ex)
@@ -86,29 +85,40 @@ namespace MobileApp.Services
             }
 
             //var response = await client.PostAsync(Config.Data.ApiUrl + "/api/register", content);
-            return resp;
+            
             //return response.IsSuccessStatusCode;
         }
-        public async Task<List<ReadUpdateJobDto>> GetJobs(string userId)
+        public async Task<List<ReadUpdateJobDto>> GetJobsAsync(string accessToken)
         {
-            var url = $"https://example.com/api/jobs?userId={userId}";
-            //do naglowka token
-
-            var response = await httpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var jobsList = JsonConvert.DeserializeObject<List<ReadUpdateJobDto>>(content);
-                return jobsList;
+
+                var uri = link + "/api/readJob";
+                //do naglowka token
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var response = await httpClient.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var jobsList = JsonConvert.DeserializeObject<List<ReadUpdateJobDto>>(content);
+                    return jobsList;
+                }
+                else
+                {
+                    // Obsługa błędu, np. wyświetlenie komunikatu o błędzie
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Obsługa błędu, np. wyświetlenie komunikatu o błędzie
-                return null;
+                // Obsłuż błąd, na przykład zapisz go w dzienniku lub obsłuż inaczej
+                throw;
             }
+
+
         }
-
-
     }
 }
+
