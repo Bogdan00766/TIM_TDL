@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MobileApp.View.LoginPage"
+             xmlns:viewModels="clr-namespace:MobileApp.ViewModels;assembly=MobileApp">
+
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel/>
+    </ContentPage.BindingContext>
+
+    <StackLayout Orientation="Vertical" >
+        <StackLayout Padding="0,80,0,0">
+            <Label Text="Email" TextColor="Black"></Label>
+            <Entry Text="{Binding Email}" Placeholder="Email" x:Name="UsernameEntry"></Entry>
+            <Label Text="Password" TextColor="Black"></Label>
+            <Entry Text="{Binding Password}" Placeholder="Hasło" IsPassword="True"></Entry>
+            <Button Command ="{Binding LoginCommand }" Text="Login" BackgroundColor="White" TextColor="Aqua"></Button>
+
+            <Label Text="Nie masz konta? Zarejestruj się!" TextColor="Gray" HorizontalOptions="Center"></Label>
+            <Button Text="Rejestracja" BackgroundColor="White" TextColor="Aqua" Clicked="Button_ClickedAsync"></Button>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
