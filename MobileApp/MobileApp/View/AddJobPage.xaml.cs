@@ -12,10 +12,34 @@ namespace MobileApp.View
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddJobPage : ContentPage
     {
-        
-        public AddJobPage()
+        public ReadUpdateJobDto Job { get; set; }
+        public bool IsCreateMode { get; set; }
+        public bool IsUpdateMode { get; set; }
+
+        public AddJobPage(ReadUpdateJobDto job = null)
         {
+
+            Job = job;
+            if(job == null) 
+            {
+                IsCreateMode = true; 
+                IsUpdateMode = false;
+            }
+            else
+            {
+                IsCreateMode = false;
+                IsUpdateMode = true;
+            }
             InitializeComponent();
+            JobDate.Date = DateTime.Now.Date;
+            if (Job != null)
+            {
+                JobName.Text = Job.Name;
+                JobDesc.Text = Job.Description;
+                JobDate.Date = Job.DueDate.Date;
+                JobStatus.SelectedItem = Job.Status;
+                JobId.Text = Job.Id.ToString();
+            }
         }
 
         private async void Button_ClickedAsync(object sender, EventArgs e)

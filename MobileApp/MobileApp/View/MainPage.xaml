@@ -9,7 +9,7 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding Jobs}">
+            <ListView ItemsSource="{Binding Jobs}" SelectedItem="{x:Binding Job, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -18,11 +18,11 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
-                                    <Label Text="{Binding Name}" FontSize="14" />
-                                    <Label Text="{Binding Description}" FontSize="14" />
-                                    <Label Text="{Binding DueDate}" FontSize="14" />
-                                    <Label Text="{Binding Status}" FontSize="14" />
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding Name, Mode=TwoWay}" FontSize="14" />
+                                    <Label Text="{Binding Description, Mode=TwoWay}" FontSize="14" />
+                                    <Label Text="{Binding DueDate, Mode=TwoWay}" FontSize="14" />
+                                    <Label Text="{Binding Status, Mode=TwoWay}" FontSize="14" />
                                 </StackLayout>
 
                             </Grid>

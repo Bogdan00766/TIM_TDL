@@ -13,10 +13,12 @@ namespace MobileApp.View
     public partial class LoginPage : ContentPage
     {
 
+
         public LoginPage()
         {
             InitializeComponent();
         }
+
 
         private async void Button_ClickedAsync(object sender, EventArgs e)
         {

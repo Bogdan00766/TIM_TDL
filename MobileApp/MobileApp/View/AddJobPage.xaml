@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:viewModels="clr-namespace:MobileApp.ViewModels"
-             x:Class="MobileApp.View.AddJobPage">
+             x:Class="MobileApp.View.AddJobPage"
+             x:Name="AddJobPg">
 
     <ContentPage.BindingContext>
         <viewModels:MainViewModel/>
@@ -10,10 +11,17 @@
     <ContentPage.Content>
 
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-         <Button Text="xddd" Clicked="Button_ClickedAsync"  Command="{x:Binding AddJobCommand}" CommandParameter="{x:Binding NewJob}"/>
+            <Label Text="Tytuł" TextColor="Black"></Label>
+            <Entry x:Name="JobName" Text="{Binding NewJob.Name, Mode=TwoWay}" Placeholder="Nazwa"></Entry>
+            <Label Text="Opis" TextColor="Black"></Label>
+            <Entry x:Name="JobDesc" Text="{Binding NewJob.Description, Mode=TwoWay}" Placeholder="Opis"></Entry>
+            <Label Text="Data wykonania" TextColor="Black"></Label>
+            <DatePicker x:Name="JobDate" Date="{Binding NewJob.DueDate, Mode=TwoWay}"></DatePicker>
+            <Label Text="Status" TextColor="Black"></Label>
+            <Picker x:Name="JobStatus" Title="Wybierz status" ItemsSource="{Binding Statuses}" SelectedItem="{Binding SelectedStatus, Mode=TwoWay}" />
+            <Entry x:Name="JobId" IsEnabled="False" Text="{Binding NewJob.Id, Mode=TwoWay}"></Entry>
+            <Button  Text="Dodaj/Edytuj" Clicked="Button_ClickedAsync"  Command="{x:Binding AddJobCommand}" CommandParameter="{x:Binding NewJob}"/>
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

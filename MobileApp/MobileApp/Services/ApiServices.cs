@@ -15,7 +15,7 @@ namespace MobileApp.Services
     public class ApiServices
     {
         private readonly HttpClient _HttpClient;
-        private string _Url = "http://192.168.0.52:5004/";
+        private string _Url = "http://192.168.77.201:5004/";
         
         public ApiServices()
         {
@@ -47,7 +47,27 @@ namespace MobileApp.Services
             
         }
 
-
+        internal async Task<ReadUpdateJobDto> UpdateJobAsync(ReadUpdateJobDto dto)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                var json = JsonConvert.SerializeObject(dto);
+                HttpContent content = new StringContent(json);
+                _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CurrentUser.AccessToken);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await _HttpClient.PutAsync("api/updateJob", content);
+                if (response != null && response.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<ReadUpdateJobDto>(await response.Content.ReadAsStringAsync());
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public async Task<bool> RegisterAsync(string email, string password)
         {
             var client = _HttpClient;
@@ -145,6 +165,31 @@ namespace MobileApp.Services
 
 
         }
+
+        internal async Task DeleteJobAsync(ReadUpdateJobDto job)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                DeleteJobDto dto = new DeleteJobDto
+                {
+                    Id = job.Id
+                };
+                var json = JsonConvert.SerializeObject(dto);
+                HttpContent content = new StringContent(json);
+                _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", CurrentUser.AccessToken);
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                response = await _HttpClient.PostAsync("api/deleteJob", content);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+    }
+    public class DeleteJobDto
+    {
+        public int Id { get; set; }
     }
 }
 

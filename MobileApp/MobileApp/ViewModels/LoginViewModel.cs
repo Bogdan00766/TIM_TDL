@@ -25,8 +25,8 @@ namespace MobileApp.ViewModels
             {
                 return new Command(async () =>
                 {
-                    var response = await _apiServices.LoginAsync(Email, Password);
-
+                    //var response = await _apiServices.LoginAsync(Email, Password);// ToDo napraw to bo to debug xDD
+                    var response = await _apiServices.LoginAsync("string", "string"); // ToDo No weź powyżej patrz xDD
                     if (response.IsSuccessStatusCode)
                     {
                         //TODO _Logger.Information("User of id: {id} and email: {email} added sucessfully", Email, Password);
