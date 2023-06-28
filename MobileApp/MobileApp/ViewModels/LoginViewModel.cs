@@ -37,8 +37,9 @@ namespace MobileApp.ViewModels
                         CurrentUser.AccessToken = userTokenInfo.AccessToken;
                         CurrentUser.RefreshToken = userTokenInfo.RefreshToken;
                         CurrentUser.Email = Email;
-
+                        //await Shell.Current.GoToAsync("//MainPage");
                         await App.Current.MainPage.Navigation.PushAsync(new MainPage());
+                        //Application.Current.MainPage = new AppShell();
                     }
                     else
                     {

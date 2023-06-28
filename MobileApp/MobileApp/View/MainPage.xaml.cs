@@ -16,13 +16,20 @@ namespace MobileApp.View
     {
         
         private MainViewModel viewModel;
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+        }
         public MainPage()
         {
             InitializeComponent();
-
             viewModel = new MainViewModel();
             BindingContext = viewModel;
             viewModel.GetJobs();
+            ToolbarItems.Add(new ToolbarItem("💬", "Chat.png", async () =>
+            {
+                await Navigation.PushAsync(new ChatPage());
+            }));
             ToolbarItems.Add(new ToolbarItem("🗑", "Delete.png", async () =>
             {
                 if (viewModel.Job == null)

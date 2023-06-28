@@ -56,8 +56,15 @@ namespace TIM_TDL.Application.WebSocket
 
             await _KafkaProducer.AddToChatQueue(kafkaChatQueueMessage);
 
+            var chatMessage = new ChatMessage
+            {
+                Content = "Successfully added to queue",
+                SenderId = null,
+                ChatId = guid
+            };
+
             _Queue.Add(Context.ConnectionId, guid);
-            await Clients.Group(guid).SendAsync("Tomek","Sucessfully added to queue");
+            await Clients.Group(guid).SendAsync("Tomek", JsonConvert.SerializeObject(chatMessage));
 
 
         }
