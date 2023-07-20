@@ -45,7 +45,7 @@ namespace MobileApp.ViewModels
         private async void SendMessageAsync()
         {
             if (String.IsNullOrEmpty(Message)) return;
-            await _ChatService.SendMessageAsync(Message, "xD");
+            await _ChatService.SendMessageAsync(Message);
         }
 
         private async void ConnectToChatAsync()

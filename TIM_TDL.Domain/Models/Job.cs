@@ -7,7 +7,7 @@ using TIM_TDL.Domain.Utils;
 
 namespace TIM_TDL.Domain.Models
 {
-    public class Job:Entity
+    public class Job : Entity
     {
         public string Name { get; set; }
         public string Description { get; set; }

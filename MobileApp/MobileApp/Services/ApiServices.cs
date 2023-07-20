@@ -85,7 +85,7 @@ namespace MobileApp.Services
             var resp = false;
             try
             {
-                string uri = "api/register";
+                string uri = "/api/register";
                 var response = await client.PostAsync(uri, content);
                 resp = response.IsSuccessStatusCode;
 

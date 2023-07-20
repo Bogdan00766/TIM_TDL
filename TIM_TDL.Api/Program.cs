@@ -29,8 +29,8 @@ builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =
     options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
-//builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:TIMConnection"]));
-builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlite("Data Source=localDB.db"));
+builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:TIMConnection"]));
+//builder.Services.AddDbContext<TDLDbContext>(options => options.UseSqlite("Data Source=localDB.db"));
 
 builder.Configuration.AddEnvironmentVariables("ENV_");
 

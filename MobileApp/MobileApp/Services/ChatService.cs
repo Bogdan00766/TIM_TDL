@@ -56,9 +56,18 @@ namespace MobileApp.Services
             }
         }
 
-        public async Task SendMessageAsync(string content, string chatId)
+        public async Task SendMessageAsync(string content)
         {
-            await _Connection.InvokeAsync("SendMessage", content, chatId);
+
+            try
+            {
+                await _Connection.InvokeAsync("SendMessage", CurrentUser.GetUserId() ,content, _ChatId);
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+            }
         }
         public async Task RegisterToQueueAsync()
         {

@@ -19,6 +19,7 @@ using TIM_TDL.Application.IServices;
 using TIM_TDL.Application.Utilities;
 using TIM_TDL.Domain.IRepositories;
 using TIM_TDL.Domain.Models;
+using TIM_TDL.Domain.Utils;
 
 namespace TIM_TDL.Application.Services
 {
@@ -56,6 +57,7 @@ namespace TIM_TDL.Application.Services
             {
                 Email = dto.Email,
                 Password = HashPassword(dto.Email, dto.Password),
+                Role = DataTypes.Roles.User
             };
             try
             {
